@@ -72,8 +72,8 @@ class primary implements renderable, templatable {
      */
     protected function get_primary_nav(): array {
         $nodes = [];
-        var_dump($this->page->primarynav->children->action());
         foreach ($this->page->primarynav->children as $node) {
+            var_dump($node->action());
             $nodes[] = [
                 'title' => $node->get_title(),
                 'url' => $node->action(),
