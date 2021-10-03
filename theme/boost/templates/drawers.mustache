@@ -59,7 +59,7 @@
     {{> theme_boost/navbar }}
     {{> theme_boost/nav-drawer }}
     {{#courseindex}}
-        {{> theme_boost/drawer }}
+        {{< theme_boost/drawer }}
             {{$id}}theme_boost-drawers-courseindex{{/id}}
             {{$drawerclasses}}drawer drawer-left {{#courseindexopen}}show{{/courseindexopen}}{{/drawerclasses}}
             {{$drawerheading}}
@@ -73,7 +73,7 @@
         {{/ theme_boost/drawer}}
     {{/courseindex}}
     {{#hasblocks}}
-        {{> theme_boost/drawer }}
+        {{< theme_boost/drawer }}
             {{$id}}theme_boost-drawers-blocks{{/id}}
             {{$drawerclasses}}drawer drawer-right {{#blockdraweropen}}show{{/blockdraweropen}}{{/drawerclasses}}
             {{$drawerheading}}
