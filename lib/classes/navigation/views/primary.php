@@ -48,7 +48,7 @@ class primary extends view {
                 $this->add(get_string('myhome'), new \moodle_url('/my/'), self::TYPE_SYSTEM,
                         null, 'home', new \pix_icon('i/home', ''));
                 $this->rootnodes['home'] = $this->add(get_string('sitehome'), new \moodle_url('/'),
-                        self::TYPE_SETTING, null, 'myhome', new \pix_icon('i/dashboard', ''));
+                        self::TYPE_SETTING, array('redirect','0'), 'myhome', new \pix_icon('i/dashboard', ''));
             }
         }
 
