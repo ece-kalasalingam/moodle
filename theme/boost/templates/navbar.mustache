@@ -50,7 +50,7 @@
         {{# output.should_display_navbar_logo }}
             <img src="{{output.get_compact_logo_url}}" class="logo mr-1" alt="{{sitename}}">
         {{/ output.should_display_navbar_logo }}
-        {{{ sitename }}}
+        <span class="d-none d-lg-block"> {{{ sitename }}}</span>
     </a>
     {{#primarymoremenu}}
         {{> core/moremenu }}
