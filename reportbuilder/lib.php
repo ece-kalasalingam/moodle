@@ -15,16 +15,30 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Capability overview settings
+ * Callback methods for reportbuilder component
  *
- * @package    tool
- * @subpackage health
- * @copyright  2011 Petr Skoda
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     core_reportbuilder
+ * @copyright   2021 Paul Holden <paulh@moodle.com>
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die;
+declare(strict_types=1);
 
-if ($hassiteconfig) {
-    $ADMIN->add('unsupported', new admin_externalpage('toolhealth', get_string('pluginname', 'tool_health'), $CFG->wwwroot.'/'.$CFG->admin.'/tool/health/index.php', 'moodle/site:config', true));
+use core_reportbuilder\form\filter;
+
+/**
+ * Return the filters form fragment
+ *
+ * @param array $params
+ * @return string
+ */
+function core_reportbuilder_output_fragment_filters_form(array $params): string {
+    $filtersform = new filter(null, null, 'post', '', [], true, [
+        'reportid' => $params['reportid'],
+        'parameters' => $params['parameters'],
+    ]);
+
+    $filtersform->set_data_for_dynamic_submission();
+
+    return $filtersform->render();
 }

@@ -36,11 +36,8 @@ export default class Component extends BaseComponent {
         // Default query selectors.
         this.selectors = {
             SECTION: `[data-for='section']`,
-            SECTION_ITEM: `[data-for='section_item']`,
-            SECTION_TITLE: `[data-for='section_title']`,
             SECTION_CMLIST: `[data-for='cmlist']`,
             CM: `[data-for='cm']`,
-            CM_NAME: `[data-for='cm_name']`,
             TOGGLER: `[data-action="togglecourseindexsection"]`,
             COLLAPSE: `[data-toggle="collapse"]`,
         };
@@ -49,6 +46,7 @@ export default class Component extends BaseComponent {
             SECTIONHIDDEN: 'dimmed',
             CMHIDDEN: 'dimmed',
             SECTIONCURRENT: 'current',
+            COLLAPSED: `collapsed`,
         };
         // Arrays to keep cms and sections elements.
         this.sections = {};
@@ -90,8 +88,6 @@ export default class Component extends BaseComponent {
 
     getWatchers() {
         return [
-            {watch: `section:updated`, handler: this._refreshSection},
-            {watch: `cm:updated`, handler: this._refreshCm},
             {watch: `cm:created`, handler: this._createCm},
             {watch: `cm:deleted`, handler: this._deleteCm},
             // Sections and cm sorting.
@@ -111,44 +107,11 @@ export default class Component extends BaseComponent {
     _setupSectionTogglers(event) {
         const sectionlink = event.target.closest(this.selectors.TOGGLER);
         if (sectionlink) {
-            event.preventDefault();
-            sectionlink.parentNode.querySelector(this.selectors.COLLAPSE).click();
+            const toggler = sectionlink.parentNode.querySelector(this.selectors.COLLAPSE);
+            if (toggler?.classList.contains(this.classes.COLLAPSED)) {
+                toggler.click();
+            }
         }
-    }
-
-    /**
-     * Update a course index section using the state information.
-     *
-     * @param {Object} details the update details.
-     */
-    _refreshSection({element}) {
-        // Find the element.
-        const target = this.sections[element.id];
-        if (!target) {
-            throw new Error(`Unkown section with ID ${element.id}`);
-        }
-        // Update classes.
-        const sectionitem = target.querySelector(this.selectors.SECTION_ITEM);
-        sectionitem.classList.toggle(this.classes.SECTIONHIDDEN, !element.visible);
-        target.classList.toggle(this.classes.SECTIONCURRENT, element.current);
-        // Update title.
-        target.querySelector(this.selectors.SECTION_TITLE).innerHTML = element.title;
-    }
-
-    /**
-     * Update a course index cm using the state information.
-     *
-     * @param {Object} details the update details.
-     */
-    _refreshCm({element}) {
-        // Find the element.
-        const target = this.cms[element.id];
-        if (!target) {
-            throw new Error(`Unkown course module with ID ${element.id}`);
-        }
-        // Update classes.
-        target.classList.toggle(this.classes.CMHIDDEN, !element.visible);
-        target.querySelector(this.selectors.CM_NAME).innerHTML = element.name;
     }
 
     /**

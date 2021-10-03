@@ -2699,7 +2699,7 @@ class core_renderer extends renderer_base {
         if ($size == -1) {
             $maxsize = '';
         } else {
-            $maxsize = get_string('maxfilesize', 'moodle', display_size($size));
+            $maxsize = get_string('maxfilesize', 'moodle', display_size($size, 0));
         }
         if ($options->buttonname) {
             $buttonname = ' name="' . $options->buttonname . '"';
@@ -2748,6 +2748,9 @@ EOD;
      */
     public function edit_button(moodle_url $url) {
 
+        if ($this->page->theme->haseditswitch == true) {
+            return;
+        }
         $url->param('sesskey', sesskey());
         if ($this->page->user_is_editing()) {
             $url->param('edit', 'off');
@@ -2758,6 +2761,27 @@ EOD;
         }
 
         return $this->single_button($url, $editstring);
+    }
+
+    /**
+     * Create a navbar switch for toggling editing mode.
+     *
+     * @return string Html containing the edit switch
+     */
+    public function edit_switch() {
+        if ($this->page->user_allowed_editing()) {
+
+            $temp = (object) [
+                'legacyseturl' => (new moodle_url('/editmode.php'))->out(false),
+                'pagecontextid' => $this->page->context->id,
+                'pageurl' => $this->page->url,
+                'sesskey' => sesskey(),
+            ];
+            if ($this->page->user_is_editing()) {
+                $temp->checked = true;
+            }
+            return $this->render_from_template('core/editswitch', $temp);
+        }
     }
 
     /**

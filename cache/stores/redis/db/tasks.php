@@ -15,18 +15,24 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version details.
+ * Scheduled tasks.
  *
- * @package    tool
- * @subpackage health
- * @copyright  2011 Petr Skoda
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @copyright 2021 The Open University
+ * @package cachestore_redis
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2021052500; // The current plugin version (Date: YYYYMMDDXX).
-$plugin->requires  = 2021052500; // Requires this Moodle version.
-$plugin->component = 'tool_health'; // Full name of the plugin (used for diagnostics)
-
-$plugin->maturity  = MATURITY_ALPHA; // this version's maturity level
+$tasks = [
+    [
+        'classname' => '\cachestore_redis\task\ttl',
+        'blocking' => 0,
+        'minute' => 'R',
+        'hour' => '*',
+        'day' => '*',
+        'month' => '*',
+        'dayofweek' => '*',
+        'disabled' => 0
+    ]
+];

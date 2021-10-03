@@ -15,32 +15,33 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Privacy Subsystem implementation for tool_health.
+ * Set Mode.
  *
- * @package    tool_health
- * @copyright  2018 Zig Tan <zig@moodle.com>
+ * @package    core
+ * @copyright  2021 Andrew Lyons
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace tool_health\privacy;
+require_once('config.php');
 
-defined('MOODLE_INTERNAL') || die();
+$setmode = optional_param('setmode', false, PARAM_BOOL);
+$contextid = required_param('context', PARAM_INT);
+$pageurl = required_param('pageurl', PARAM_LOCALURL);
 
-/**
- * Privacy Subsystem for tool_health implementing null_provider.
- *
- * @copyright  2018 Zig Tan <zig@moodle.com>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-class provider implements \core_privacy\local\metadata\null_provider {
+require_sesskey();
+require_login();
 
-    /**
-     * Get the language string identifier with the component's language
-     * file to explain why this plugin stores no data.
-     *
-     * @return  string
-     */
-    public static function get_reason() : string {
-        return 'privacy:metadata';
-    }
+$context = \context_helper::instance_by_id($contextid);
+$PAGE->set_context($context);
+
+if ($context->id === \context_user::instance($USER->id)->id) {
+    $PAGE->set_blocks_editing_capability('moodle/my:manageblocks');
 }
+
+if ($PAGE->user_allowed_editing()) {
+    $USER->editing = $setmode;
+} else {
+    \core\notification::add(get_string('cannotswitcheditmodeon', 'error'), \core\notification::ERROR);
+}
+
+redirect($pageurl);

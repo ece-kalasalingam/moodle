@@ -1011,6 +1011,45 @@ EOF;
     }
 
     /**
+     * Ensure that edit mode is (not) available on the current page.
+     *
+     * @Then edit mode should be available on the current page
+     * @Then edit mode should :not be available on the current page
+     * @param bool $not
+     */
+    public function edit_mode_should_be_available(bool $not = false): void {
+        $isavailable = $this->is_edit_mode_available();
+        $shouldbeavailable = empty($not);
+
+        if ($isavailable && !$shouldbeavailable) {
+            throw new ExpectationException("Edit mode is available and should not be", $this->getSession());
+        } else if ($shouldbeavailable && !$isavailable) {
+            throw new ExpectationException("Edit mode is not available and should be", $this->getSession());
+        }
+    }
+
+    /**
+     * Check whether edit mode is available on the current page.
+     *
+     * @return bool
+     */
+    public function is_edit_mode_available(): bool {
+        // If the course is already in editing mode then it will have the class 'editing' on the body.
+        // This is a 'cheap' way of telling if the course is in editing mode and therefore if edit mode is available.
+        $body = $this->find('css', 'body');
+        if ($body->hasClass('editing')) {
+            return true;
+        }
+
+        try {
+            $this->find('field', get_string('editmode'), false, false, 0);
+            return true;
+        } catch (ElementNotFoundException $e) {
+            return false;
+        }
+    }
+
+    /**
      * This step triggers cron like a user would do going to admin/cron.php.
      *
      * @Given /^I trigger cron$/
@@ -2083,5 +2122,18 @@ EOF;
      */
     public function i_mark_this_test_as_long_running(int $factor = 2): void {
         $this->set_test_timeout_factor($factor);
+    }
+
+    /**
+     * Click on a dynamic tab to load its content
+     *
+     * @Given /^I click on the "(?P<tab_string>(?:[^"]|\\")*)" dynamic tab$/
+     *
+     * @param string $tabname
+     */
+    public function i_click_on_the_dynamic_tab(string $tabname): void {
+        $xpath = "//*[@id='dynamictabs-tabs'][descendant::a[contains(text(), '" . $this->escape($tabname) . "')]]";
+        $this->execute('behat_general::i_click_on_in_the',
+            [$tabname, 'link', $xpath, 'xpath_element']);
     }
 }

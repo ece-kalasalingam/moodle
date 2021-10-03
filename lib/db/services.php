@@ -2779,6 +2779,19 @@ $functions = array(
         'type'        => 'write',
         'ajax'        => true,
     ],
+    'core_dynamic_tabs_get_content' => [
+        'classname'   => 'core\external\dynamic_tabs_get_content',
+        'description' => 'Returns the content for a dynamic tab',
+        'type'        => 'read',
+        'ajax'        => true,
+    ],
+    'core_change_editmode' => [
+        'classname'   => 'core\external\editmode',
+        'methodname'   => 'change_editmode',
+        'description' => 'Change the editing mode',
+        'type'        => 'write',
+        'ajax'        => true,
+    ],
 );
 
 $services = array(
